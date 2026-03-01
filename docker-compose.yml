@@ -1,0 +1,8 @@
+services:
+  ig-slicer:
+    build: .
+    ports:
+      - "5067:5067"
+    volumes:
+      - ./temp:/app/temp
+    restart: unless-stopped
