@@ -8,11 +8,13 @@ import uuid
 import zipfile
 
 from flask import Flask, jsonify, request, send_from_directory, render_template
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 import config
 from slicer import get_media_info, slice_image, slice_video, ffmpeg_available, ffprobe_available
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.config["MAX_CONTENT_LENGTH"] = config.MAX_CONTENT_LENGTH
 
 
@@ -231,4 +233,4 @@ def source_preview(session_id, filename):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=True, port=5000)
